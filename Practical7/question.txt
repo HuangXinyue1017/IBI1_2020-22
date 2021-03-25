@@ -1,0 +1,8 @@
+【Question】
+How have new cases and total cases developed over time in Spain
+
+【Answer】
+From line 56 to line 86 in covid.py
+
+【Discussion】
+The new cases increased slowly while the total cases increased dramatically.
