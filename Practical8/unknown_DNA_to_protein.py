@@ -1,8 +1,5 @@
 import os
-import sys
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
+import re
 
 # create a dictionary to store the code
 dict = {'TTT':'F','TTC':'F','TTA':'L','TTG':'L',
@@ -30,9 +27,10 @@ file = open(file_name, "r")
 name = []
 pro = []
 seq = ''
+unknown = 0
 for line in file.readlines():
 	if (line[0] == '>'):
-		if (seq != ''):
+		if (unknown):
 			# from DNA to protein
 			f = 0
 			a = ''
@@ -40,8 +38,12 @@ for line in file.readlines():
 				a = a + dict[seq[f:f+3]]
 				f = f + 3
 			pro.append(a)
-		en = line.find('_')
-		name.append(line[1:en])
+		if (re.search('unknown function',line)):
+			unknown = 1
+			en = line.find('_')
+			name.append(line[1:en])
+		else:
+			unknown = 0
 		seq = ''
 	else:
 		line = line.strip()
