@@ -21,6 +21,15 @@ dict = {'TTT':'F','TTC':'F','TTA':'L','TTG':'L',
 
 file = open("Saccharomyces_cerevisiae.R64-1-1.cdna.all.fa", "r")
 
+# from DNA to protein
+def DNA_to_protein(s):
+	f = 0
+	a = ''
+	for t in range(0,(int)(len(s)/3)):
+		a = a + dict[s[f:f+3]]
+		f = f + 3
+	return a
+
 # name name of sequences
 # pro amino acids of sequences
 name = []
@@ -30,30 +39,26 @@ unknown = 0
 for line in file.readlines():
 	if (line[0] == '>'):
 		if (unknown):
-			# from DNA to protein
-			f = 0
-			a = ''
-			for t in range(0,(int)(len(seq)/3)):
-				a = a + dict[seq[f:f+3]]
-				f = f + 3
-			pro.append(a)
+			pro.append(DNA_to_protein(seq))
 		if (re.search('unknown function',line)):
 			unknown = 1
 			en = line.find('_')
 			name.append(line[1:en])
+			seq = ''
 		else:
 			unknown = 0
-		seq = ''
-	else:
+	elif (unknown):
 		line = line.strip()
 		seq = seq + line
+if (unknown):
+	pro.append(DNA_to_protein(seq))
 
 file.close()
 
 new_file = open("unknown_function.fa", "w")
 
 # print answer
-for i in range(0,len(name)-1):
+for i in range(0,len(name)):
 	t = new_file.write(name[i] + ' ' + str(len(pro[i]))+'\n')
 	t = new_file.write(pro[i] + '\n')
 
