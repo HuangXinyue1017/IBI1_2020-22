@@ -1,4 +1,5 @@
 import re
+import string
 
 # Create class Student
 class Student(object):
@@ -10,13 +11,8 @@ class Student(object):
 		print('Full name:',self.first_name,self.last_name)
 		print('Undergraduate programme:',self.programme)
 
-# The example name list is in student.txt
-f=open('students.txt','r')
-
-for line in f.readlines():
-	line=line.strip()
-	line=line.split()
-	A=Student(line[0],line[1],line[2])
-	A.describe()
-
-f.close()
+line=input("Please input the first name, last name, and programme of the student:",)
+line=line.strip()
+line=line.split()
+A=Student(line[0],line[1],line[2])
+A.describe()
