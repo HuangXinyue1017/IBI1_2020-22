@@ -1,0 +1,25 @@
+#Write a short summary of your findings and also include your interpretation.
+#In these findings, you should record the alignment score and the percentage of identical amino acids for each comparison.
+#Your interpretation should state what biological, or evolutionary, interpretation you think we can make from these data.
+
+#Summary of alignment results
+
+human gene and mouse gene
+distance: 23
+percentage of identical amino acids: 89.64%
+alignment score: 1091
+
+human gene and random gene
+distance: 210
+percentage of identical amino acids: 5.41%
+alignment score: -250
+
+mouse gene and random gene
+distance: 209
+percentage of identical amino acids: 5.86%
+alignment score: -250
+
+#My thoughts
+The distance between the human gene and mouse gene is much smaller than either of them with random genes.
+Their percentage of identical amino acids and alignment score are also high.
+Maybe there are some evolutionary relationships between them.
