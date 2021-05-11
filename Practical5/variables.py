@@ -10,7 +10,7 @@ else:
 
 X=True
 Y=False
-Z=(X and not Y)
+Z=(X and not Y) or （Y and not X）
 print("Z=",Z)
 W=(X!=Y)
 print("W=",W)

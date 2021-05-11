@@ -6,7 +6,7 @@ r=1.1
 t=0
 
 #Start
-while(t!=5):
-	n*=r
+while(t<5):
+	n=n*(1+r)
 	print(n)
 	t+=1
