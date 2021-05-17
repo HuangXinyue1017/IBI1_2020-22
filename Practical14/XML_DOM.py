@@ -90,14 +90,14 @@ RNA = calculate("RNA")
 PRO = calculate("protein")
 OTHER = calculate("carbohydrate")
 
-print("Number of child nodes of DNA-associated terms: %d" % DNA)
-print("Number of child nodes of RNA-associated terms: %d" % RNA)
-print("Number of child nodes of protein-associated terms: %d" % PRO)
-print("Number of child nodes of carbohydrate-associated terms: %d" % OTHER)
+print("Number of child nodes of DNA-associated terms: %d" % DNA) #8651
+print("Number of child nodes of RNA-associated terms: %d" % RNA) #11004
+print("Number of child nodes of protein-associated terms: %d" % PRO) #33459
+print("Number of child nodes of carbohydrate-associated terms: %d" % OTHER) #4879
 
 # plot the pie chart
-labels = ['DNA-associated','RNA-associated terms', \
-		  'Protein-associated terms','carbohydrate-associated']
+labels = ['DNA-associated','RNA-associated', \
+		  'Protein-associated','Carbohydrate-associated']
 values = [DNA,RNA,PRO,OTHER]
 explode = (0,0.1,0,0)
 plt.pie(values, explode = explode, labels = labels,	autopct = '%1.1f%%', shadow = True, startangle = 90)
