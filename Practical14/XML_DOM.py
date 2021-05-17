@@ -26,16 +26,19 @@ def parse_xml(path):
 	terms = collection.getElementsByTagName("term")
 	return terms
 
-def count(now):
-	# count the childnodes
+def count(now,fe):
 	now.flag = True
 	for ch in now.ch_list:
+		# subtract the middle nodes
+		if(ch.feature.find(fe) != -1):
+			sub[ch.id] = 1
+		# find all the related nodes
 		if(ch.flag == False):
-			count(ch)
-	return
+			count(ch,fe)
 
 def calculate(fe):
-	# initialize and counted the direct related nodes
+	# initialize and counted the nodes with feature
+	sub.clear()
 	related_node = 0
 	for now in node_dict.values():
 		now.flag = False
@@ -45,7 +48,7 @@ def calculate(fe):
 	# mark all the related nodes and their childnodes
 	for now in node_dict.values():
 		if(now.feature.find(fe) != -1 and now.flag == False):
-			count(now)
+			count(now,fe)
 
 	# count all the related nodes and their childnodes
 	all_node = 0
@@ -53,7 +56,7 @@ def calculate(fe):
 		if(now.flag == True):
 			all_node += 1
 
-	return all_node-related_node
+	return all_node - related_node + len(sub)
 
 def build_graph(terms):
 	# build all nodes
@@ -81,13 +84,20 @@ node_dict = {}
 build_graph(terms)
 
 # calculate the answer
+sub = {}
 DNA = calculate("DNA")
 RNA = calculate("RNA")
 PRO = calculate("protein")
 OTHER = calculate("carbohydrate")
 
+print("Number of child nodes of DNA-associated terms: %d" % DNA)
+print("Number of child nodes of RNA-associated terms: %d" % RNA)
+print("Number of child nodes of protein-associated terms: %d" % PRO)
+print("Number of child nodes of carbohydrate-associated terms: %d" % OTHER)
+
 # plot the pie chart
-labels = ['DNA','RNA','Protein','Carbohydrate']
+labels = ['DNA-associated','RNA-associated terms', \
+		  'Protein-associated terms','carbohydrate-associated']
 values = [DNA,RNA,PRO,OTHER]
 explode = (0,0.1,0,0)
 plt.pie(values, explode = explode, labels = labels,	autopct = '%1.1f%%', shadow = True, startangle = 90)
