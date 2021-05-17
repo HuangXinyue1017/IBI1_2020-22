@@ -1,0 +1,95 @@
+import xml.dom.minidom
+from xml.dom.minidom import parse
+import matplotlib.pyplot as plt
+import re
+import os
+
+class node:
+	def __init__(self,id,fe):
+		self.id = id
+		self.fa_list = [] # all fathers of this node
+		self.ch_list = [] # all children of this node
+		self.feature = fe # DNA / RNA / protein / other molecule
+		self.flag = False # whether this node has been added or not
+
+def link(fa,ch):
+	# two-way link
+	fa.ch_list.append(ch)
+	ch.fa_list.append(fa)
+
+def parse_xml(path):
+	# parse the XML file into a DOM document object
+	DOMTree = xml.dom.minidom.parse(path)
+	# get the root element of the document
+	collection = DOMTree.documentElement
+	# get a list of 'term' elements
+	terms = collection.getElementsByTagName("term")
+	return terms
+
+def count(now):
+	# count the childnodes
+	now.flag = True
+	for ch in now.ch_list:
+		if(ch.flag == False):
+			count(ch)
+	return
+
+def calculate(fe):
+	# initialize and counted the direct related nodes
+	related_node = 0
+	for now in node_dict.values():
+		now.flag = False
+		if(now.feature.find(fe) != -1):
+			related_node += 1
+
+	# mark all the related nodes and their childnodes
+	for now in node_dict.values():
+		if(now.feature.find(fe) != -1 and now.flag == False):
+			count(now)
+
+	# count all the related nodes and their childnodes
+	all_node = 0
+	for now in node_dict.values():
+		if(now.flag == True):
+			all_node += 1
+
+	return all_node-related_node
+
+def build_graph(terms):
+	# build all nodes
+	for term in terms:
+		node_id = term.getElementsByTagName("id")[0].childNodes[0].data
+		def_text = term.getElementsByTagName("defstr")[0].childNodes[0].data
+		node_dict[node_id] = node(node_id,def_text)
+
+	# links nodes
+	for term in terms:
+		node_id = term.getElementsByTagName("id")[0].childNodes[0].data
+		fathers = [father.childNodes[0].data for father in term.getElementsByTagName("is_a")]
+		for fa_id in fathers:
+			link(node_dict[fa_id],node_dict[node_id])
+	return
+
+# define absolute file path
+path = "C:\\Users\\86186\\Desktop\\test\\go_obo.xml"
+
+# parse the XML file
+terms = parse_xml(path)
+
+# build tree
+node_dict = {}
+build_graph(terms)
+
+# calculate the answer
+DNA = calculate("DNA")
+RNA = calculate("RNA")
+PRO = calculate("protein")
+OTHER = calculate("carbohydrate")
+
+# plot the pie chart
+labels = ['DNA','RNA','Protein','Carbohydrate']
+values = [DNA,RNA,PRO,OTHER]
+explode = (0,0.1,0,0)
+plt.pie(values, explode = explode, labels = labels,	autopct = '%1.1f%%', shadow = True, startangle = 90)
+plt.title("The number of child nodes of four kinds of molecules")
+plt.show()
